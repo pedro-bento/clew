@@ -1,6 +1,7 @@
-// sclew.h - v0.1 - Public Domain
-// compling to Apache License, Version 2.0
-// by Pedro Bento 2024
+// sclew.h - v0.1 - Public Domain - Pedro Bento 2024
+// 
+// Portions of this file may be subject to the Apache License, Version 2.0, 
+// when applicable to content created by The Khronos Group Inc.
 //
 // Single file openCL Extension Wrangler library.
 //

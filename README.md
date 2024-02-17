@@ -1,27 +1,27 @@
 # Single file openCL Extension Wrangler library
 
-`sclew.h` is released as public domain, allowing unrestricted use, modification, and distribution without any restrictions. When applicable to the content created by The Khronos Group Inc., this file complies with the Apache License, Version 2.0.
+`clew.h` is released as public domain, allowing unrestricted use, modification, and distribution without any restrictions. When applicable to the content created by The Khronos Group Inc., this file complies with the Apache License, Version 2.0.
 
 ## Example
 
 ```c
 #define CL_TARGET_OPENCL_VERSION 300
-#define SCLEW_IMPLEMENTATION
-#include "sclew.h"
+#define CLEW_IMPLEMENTATION
+#include "clew.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
 int main(void) {
     cl_uint cl_err;
-    const char *sclew_err;
+    const char *clew_err;
 
     cl_platform_id platform_id;
     char platform_name[64];
 
-    sclew_err = sclew_init();
-    if (sclew_err != NULL) {
-        printf("[ERROR] failed to init sclew: %s\n", sclew_err);
+    clew_err = clew_init();
+    if (clew_err != NULL) {
+        printf("[ERROR] failed to init clew: %s\n", clew_err);
         return EXIT_FAILURE;
     }
 
@@ -39,7 +39,7 @@ int main(void) {
 
     printf("platform_name: %s\n", platform_name);
 
-    sclew_quit();
+    clew_quit();
 
     return EXIT_SUCCESS;
 }

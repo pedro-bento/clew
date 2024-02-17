@@ -1,4 +1,4 @@
-// sclew.h - v0.1 - Public Domain - Pedro Bento 2024
+// clew.h - v0.1 - Public Domain - Pedro Bento 2024
 // 
 // Portions of this file may be subject to the Apache License, Version 2.0, 
 // when applicable to content created by The Khronos Group Inc.
@@ -7,16 +7,16 @@
 //
 // This file provides both the interface and the implementation.
 // To instantiate the implementation,
-//      #define SCLEW_IMPLEMENTATION
+//      #define CLEW_IMPLEMENTATION
 // in *ONE* source file, before #including this file.
 
-#ifndef SCLEW_H
-#define SCLEW_H
+#ifndef CLEW_H
+#define CLEW_H
 
 // cl_version.h - Created by The Khronos Group Inc.
 //
 // This content has been modified by Pedro Bento 
-// and the changes can be found at: https://github.com/pedro-bento/sclew
+// and the changes can be found at: https://github.com/pedro-bento/clew
 
 /*******************************************************************************
  * Copyright (c) 2018-2020 The Khronos Group Inc.
@@ -98,7 +98,7 @@
 // cl_platform.h - Created by The Khronos Group Inc.
 //
 // This content has been modified by Pedro Bento 
-// and the changes can be found at: https://github.com/pedro-bento/sclew
+// and the changes can be found at: https://github.com/pedro-bento/clew
 
 /*******************************************************************************
  * Copyright (c) 2008-2020 The Khronos Group Inc.
@@ -1509,7 +1509,7 @@ typedef union
 // cl.h - Created by The Khronos Group Inc.
 //
 // This content has been modified by Pedro Bento 
-// and the changes can be found at: https://github.com/pedro-bento/sclew
+// and the changes can be found at: https://github.com/pedro-bento/clew
 
 /*******************************************************************************
  * Copyright (c) 2008-2020 The Khronos Group Inc.
@@ -3440,7 +3440,7 @@ clEnqueueTask_t)(cl_command_queue  command_queue,
 // Created by Pedro Bento 2024
 //
 // This content has been created by Pedro Bento 
-// and the additions can be found at: https://github.com/pedro-bento/sclew
+// and the additions can be found at: https://github.com/pedro-bento/clew
 
 clGetPlatformIDs_t clGetPlatformIDs;
 clGetPlatformInfo_t clGetPlatformInfo;
@@ -3629,38 +3629,38 @@ clEnqueueTask_t clEnqueueTask;
 }
 #endif
 
-const char* sclew_init();
-void sclew_quit();
+const char* clew_init();
+void clew_quit();
 
-#endif /* SCLEW_H */
+#endif /* CLEW_H */
 
-#ifdef SCLEW_IMPLEMENTATION
+#ifdef CLEW_IMPLEMENTATION
 
 #ifdef _WIN32
     #define WIN32_LEAN_AND_MEAN
     #define VC_EXTRALEAN
     #include <windows.h>
 
-    typedef HMODULE sclew_handle_t;
+    typedef HMODULE clew_handle_t;
 
-    #define sclew_dlopen LoadLibrary
-    #define sclew_dlclose FreeLibrary
-    #define sclew_psearch GetProcAddress
-    #define sclew_pdefined(proc) ((proc) != NULL)
+    #define clew_dlopen LoadLibrary
+    #define clew_dlclose FreeLibrary
+    #define clew_psearch GetProcAddress
+    #define clew_pdefined(proc) ((proc) != NULL)
 #else
     #include <dlfcn.h>
 
-    typedef void* sclew_handle_t;
+    typedef void* clew_handle_t;
 
-    #define sclew_dlopen(path) dlopen((path), RTLD_LAZY)
-    #define sclew_dlclose dlclose
-    #define sclew_psearch dlsym
-    #define sclew_pdefined(proc) ((error = dlerror()) != NULL)
+    #define clew_dlopen(path) dlopen((path), RTLD_LAZY)
+    #define clew_dlclose dlclose
+    #define clew_psearch dlsym
+    #define clew_pdefined(proc) ((error = dlerror()) != NULL)
 #endif
 
-static sclew_handle_t sclew_handle = NULL;
+static clew_handle_t clew_handle = NULL;
 
-const char* sclew_init()
+const char* clew_init()
 {
 #ifdef _WIN32
     const char* paths[] = { "OpenCL.dll" };
@@ -3673,314 +3673,314 @@ const char* sclew_init()
     const size_t paths_count = sizeof(paths) / sizeof(*paths);
 
     for (size_t i = 0; i < paths_count; i++) {
-        sclew_handle = sclew_dlopen(paths[i]);
-        if (sclew_handle != NULL) break;
+        clew_handle = clew_dlopen(paths[i]);
+        if (clew_handle != NULL) break;
     }
-    if (sclew_handle == NULL) return "could not find OpenCL in system, make sure it is installed";
+    if (clew_handle == NULL) return "could not find OpenCL in system, make sure it is installed";
 
-    clGetPlatformIDs = (clGetPlatformIDs_t)sclew_psearch(sclew_handle, "clGetPlatformIDs");
-    if (!sclew_pdefined(clGetPlatformIDs)) return "could not find `clGetPlatformIDs` in handle";
-    clGetPlatformInfo = (clGetPlatformInfo_t)sclew_psearch(sclew_handle, "clGetPlatformInfo");
-    if (!sclew_pdefined(clGetPlatformInfo)) return "could not find `clGetPlatformInfo` in handle";
-    clGetDeviceIDs = (clGetDeviceIDs_t)sclew_psearch(sclew_handle, "clGetDeviceIDs");
-    if (!sclew_pdefined(clGetDeviceIDs)) return "could not find `clGetDeviceIDs` in handle";
-    clGetDeviceInfo = (clGetDeviceInfo_t)sclew_psearch(sclew_handle, "clGetDeviceInfo");
-    if (!sclew_pdefined(clGetDeviceInfo)) return "could not find `clGetDeviceInfo` in handle";
+    clGetPlatformIDs = (clGetPlatformIDs_t)clew_psearch(clew_handle, "clGetPlatformIDs");
+    if (!clew_pdefined(clGetPlatformIDs)) return "could not find `clGetPlatformIDs` in handle";
+    clGetPlatformInfo = (clGetPlatformInfo_t)clew_psearch(clew_handle, "clGetPlatformInfo");
+    if (!clew_pdefined(clGetPlatformInfo)) return "could not find `clGetPlatformInfo` in handle";
+    clGetDeviceIDs = (clGetDeviceIDs_t)clew_psearch(clew_handle, "clGetDeviceIDs");
+    if (!clew_pdefined(clGetDeviceIDs)) return "could not find `clGetDeviceIDs` in handle";
+    clGetDeviceInfo = (clGetDeviceInfo_t)clew_psearch(clew_handle, "clGetDeviceInfo");
+    if (!clew_pdefined(clGetDeviceInfo)) return "could not find `clGetDeviceInfo` in handle";
 #ifdef CL_VERSION_1_2
-    clCreateSubDevices = (clCreateSubDevices_t)sclew_psearch(sclew_handle, "clCreateSubDevices");
-    if (!sclew_pdefined(clCreateSubDevices)) return "could not find `clCreateSubDevices` in handle";
-    clRetainDevice = (clRetainDevice_t)sclew_psearch(sclew_handle, "clRetainDevice");
-    if (!sclew_pdefined(clRetainDevice)) return "could not find `clRetainDevice` in handle";
-    clReleaseDevice = (clReleaseDevice_t)sclew_psearch(sclew_handle, "clReleaseDevice");
-    if (!sclew_pdefined(clReleaseDevice)) return "could not find `clReleaseDevice` in handle";
+    clCreateSubDevices = (clCreateSubDevices_t)clew_psearch(clew_handle, "clCreateSubDevices");
+    if (!clew_pdefined(clCreateSubDevices)) return "could not find `clCreateSubDevices` in handle";
+    clRetainDevice = (clRetainDevice_t)clew_psearch(clew_handle, "clRetainDevice");
+    if (!clew_pdefined(clRetainDevice)) return "could not find `clRetainDevice` in handle";
+    clReleaseDevice = (clReleaseDevice_t)clew_psearch(clew_handle, "clReleaseDevice");
+    if (!clew_pdefined(clReleaseDevice)) return "could not find `clReleaseDevice` in handle";
 #endif
 #ifdef CL_VERSION_2_1
-    clSetDefaultDeviceCommandQueue = (clSetDefaultDeviceCommandQueue_t)sclew_psearch(sclew_handle, "clSetDefaultDeviceCommandQueue");
-    if (!sclew_pdefined(clSetDefaultDeviceCommandQueue)) return "could not find `clSetDefaultDeviceCommandQueue` in handle";
-    clGetDeviceAndHostTimer = (clGetDeviceAndHostTimer_t)sclew_psearch(sclew_handle, "clGetDeviceAndHostTimer");
-    if (!sclew_pdefined(clGetDeviceAndHostTimer)) return "could not find `clGetDeviceAndHostTimer` in handle";
-    clGetHostTimer = (clGetHostTimer_t)sclew_psearch(sclew_handle, "clGetHostTimer");
-    if (!sclew_pdefined(clGetHostTimer)) return "could not find `clGetHostTimer` in handle";
+    clSetDefaultDeviceCommandQueue = (clSetDefaultDeviceCommandQueue_t)clew_psearch(clew_handle, "clSetDefaultDeviceCommandQueue");
+    if (!clew_pdefined(clSetDefaultDeviceCommandQueue)) return "could not find `clSetDefaultDeviceCommandQueue` in handle";
+    clGetDeviceAndHostTimer = (clGetDeviceAndHostTimer_t)clew_psearch(clew_handle, "clGetDeviceAndHostTimer");
+    if (!clew_pdefined(clGetDeviceAndHostTimer)) return "could not find `clGetDeviceAndHostTimer` in handle";
+    clGetHostTimer = (clGetHostTimer_t)clew_psearch(clew_handle, "clGetHostTimer");
+    if (!clew_pdefined(clGetHostTimer)) return "could not find `clGetHostTimer` in handle";
 #endif
-    clCreateContext = (clCreateContext_t)sclew_psearch(sclew_handle, "clCreateContext");
-    if (!sclew_pdefined(clCreateContext)) return "could not find `clCreateContext` in handle";
-    clCreateContextFromType = (clCreateContextFromType_t)sclew_psearch(sclew_handle, "clCreateContextFromType");
-    if (!sclew_pdefined(clCreateContextFromType)) return "could not find `clCreateContextFromType` in handle";
-    clRetainContext = (clRetainContext_t)sclew_psearch(sclew_handle, "clRetainContext");
-    if (!sclew_pdefined(clRetainContext)) return "could not find `clRetainContext` in handle";
-    clReleaseContext = (clReleaseContext_t)sclew_psearch(sclew_handle, "clReleaseContext");
-    if (!sclew_pdefined(clReleaseContext)) return "could not find `clReleaseContext` in handle";
-    clGetContextInfo = (clGetContextInfo_t)sclew_psearch(sclew_handle, "clGetContextInfo");
-    if (!sclew_pdefined(clGetContextInfo)) return "could not find `clGetContextInfo` in handle";
+    clCreateContext = (clCreateContext_t)clew_psearch(clew_handle, "clCreateContext");
+    if (!clew_pdefined(clCreateContext)) return "could not find `clCreateContext` in handle";
+    clCreateContextFromType = (clCreateContextFromType_t)clew_psearch(clew_handle, "clCreateContextFromType");
+    if (!clew_pdefined(clCreateContextFromType)) return "could not find `clCreateContextFromType` in handle";
+    clRetainContext = (clRetainContext_t)clew_psearch(clew_handle, "clRetainContext");
+    if (!clew_pdefined(clRetainContext)) return "could not find `clRetainContext` in handle";
+    clReleaseContext = (clReleaseContext_t)clew_psearch(clew_handle, "clReleaseContext");
+    if (!clew_pdefined(clReleaseContext)) return "could not find `clReleaseContext` in handle";
+    clGetContextInfo = (clGetContextInfo_t)clew_psearch(clew_handle, "clGetContextInfo");
+    if (!clew_pdefined(clGetContextInfo)) return "could not find `clGetContextInfo` in handle";
 #ifdef CL_VERSION_3_0
-    clSetContextDestructorCallback = (clSetContextDestructorCallback_t)sclew_psearch(sclew_handle, "clSetContextDestructorCallback");
-    if (!sclew_pdefined(clSetContextDestructorCallback)) return "could not find `clSetContextDestructorCallback` in handle";
+    clSetContextDestructorCallback = (clSetContextDestructorCallback_t)clew_psearch(clew_handle, "clSetContextDestructorCallback");
+    if (!clew_pdefined(clSetContextDestructorCallback)) return "could not find `clSetContextDestructorCallback` in handle";
 #endif
 #ifdef CL_VERSION_2_0
-    clCreateCommandQueueWithProperties = (clCreateCommandQueueWithProperties_t)sclew_psearch(sclew_handle, "clCreateCommandQueueWithProperties");
-    if (!sclew_pdefined(clCreateCommandQueueWithProperties)) return "could not find `clCreateCommandQueueWithProperties` in handle";
+    clCreateCommandQueueWithProperties = (clCreateCommandQueueWithProperties_t)clew_psearch(clew_handle, "clCreateCommandQueueWithProperties");
+    if (!clew_pdefined(clCreateCommandQueueWithProperties)) return "could not find `clCreateCommandQueueWithProperties` in handle";
 #endif
-    clRetainCommandQueue = (clRetainCommandQueue_t)sclew_psearch(sclew_handle, "clRetainCommandQueue");
-    if (!sclew_pdefined(clRetainCommandQueue)) return "could not find `clRetainCommandQueue` in handle";
-    clReleaseCommandQueue = (clReleaseCommandQueue_t)sclew_psearch(sclew_handle, "clReleaseCommandQueue");
-    if (!sclew_pdefined(clReleaseCommandQueue)) return "could not find `clReleaseCommandQueue` in handle";
-    clGetCommandQueueInfo = (clGetCommandQueueInfo_t)sclew_psearch(sclew_handle, "clGetCommandQueueInfo");
-    if (!sclew_pdefined(clGetCommandQueueInfo)) return "could not find `clGetCommandQueueInfo` in handle";
-    clCreateBuffer = (clCreateBuffer_t)sclew_psearch(sclew_handle, "clCreateBuffer");
-    if (!sclew_pdefined(clCreateBuffer)) return "could not find `clCreateBuffer` in handle";
+    clRetainCommandQueue = (clRetainCommandQueue_t)clew_psearch(clew_handle, "clRetainCommandQueue");
+    if (!clew_pdefined(clRetainCommandQueue)) return "could not find `clRetainCommandQueue` in handle";
+    clReleaseCommandQueue = (clReleaseCommandQueue_t)clew_psearch(clew_handle, "clReleaseCommandQueue");
+    if (!clew_pdefined(clReleaseCommandQueue)) return "could not find `clReleaseCommandQueue` in handle";
+    clGetCommandQueueInfo = (clGetCommandQueueInfo_t)clew_psearch(clew_handle, "clGetCommandQueueInfo");
+    if (!clew_pdefined(clGetCommandQueueInfo)) return "could not find `clGetCommandQueueInfo` in handle";
+    clCreateBuffer = (clCreateBuffer_t)clew_psearch(clew_handle, "clCreateBuffer");
+    if (!clew_pdefined(clCreateBuffer)) return "could not find `clCreateBuffer` in handle";
 #ifdef CL_VERSION_1_1
-    clCreateSubBuffer = (clCreateSubBuffer_t)sclew_psearch(sclew_handle, "clCreateSubBuffer");
-    if (!sclew_pdefined(clCreateSubBuffer)) return "could not find `clCreateSubBuffer` in handle";
+    clCreateSubBuffer = (clCreateSubBuffer_t)clew_psearch(clew_handle, "clCreateSubBuffer");
+    if (!clew_pdefined(clCreateSubBuffer)) return "could not find `clCreateSubBuffer` in handle";
 #endif
 #ifdef CL_VERSION_1_2
-    clCreateImage = (clCreateImage_t)sclew_psearch(sclew_handle, "clCreateImage");
-    if (!sclew_pdefined(clCreateImage)) return "could not find `clCreateImage` in handle";
+    clCreateImage = (clCreateImage_t)clew_psearch(clew_handle, "clCreateImage");
+    if (!clew_pdefined(clCreateImage)) return "could not find `clCreateImage` in handle";
 #endif
 #ifdef CL_VERSION_2_0
-    clCreatePipe = (clCreatePipe_t)sclew_psearch(sclew_handle, "clCreatePipe");
-    if (!sclew_pdefined(clCreatePipe)) return "could not find `clCreatePipe` in handle";
+    clCreatePipe = (clCreatePipe_t)clew_psearch(clew_handle, "clCreatePipe");
+    if (!clew_pdefined(clCreatePipe)) return "could not find `clCreatePipe` in handle";
 #endif
 #ifdef CL_VERSION_3_0
-    clCreateBufferWithProperties = (clCreateBufferWithProperties_t)sclew_psearch(sclew_handle, "clCreateBufferWithProperties");
-    if (!sclew_pdefined(clCreateBufferWithProperties)) return "could not find `clCreateBufferWithProperties` in handle";
-    clCreateImageWithProperties = (clCreateImageWithProperties_t)sclew_psearch(sclew_handle, "clCreateImageWithProperties");
-    if (!sclew_pdefined(clCreateImageWithProperties)) return "could not find `clCreateImageWithProperties` in handle";
+    clCreateBufferWithProperties = (clCreateBufferWithProperties_t)clew_psearch(clew_handle, "clCreateBufferWithProperties");
+    if (!clew_pdefined(clCreateBufferWithProperties)) return "could not find `clCreateBufferWithProperties` in handle";
+    clCreateImageWithProperties = (clCreateImageWithProperties_t)clew_psearch(clew_handle, "clCreateImageWithProperties");
+    if (!clew_pdefined(clCreateImageWithProperties)) return "could not find `clCreateImageWithProperties` in handle";
 #endif
-    clRetainMemObject = (clRetainMemObject_t)sclew_psearch(sclew_handle, "clRetainMemObject");
-    if (!sclew_pdefined(clRetainMemObject)) return "could not find `clRetainMemObject` in handle";
-    clReleaseMemObject = (clReleaseMemObject_t)sclew_psearch(sclew_handle, "clReleaseMemObject");
-    if (!sclew_pdefined(clReleaseMemObject)) return "could not find `clReleaseMemObject` in handle";
-    clGetSupportedImageFormats = (clGetSupportedImageFormats_t)sclew_psearch(sclew_handle, "clGetSupportedImageFormats");
-    if (!sclew_pdefined(clGetSupportedImageFormats)) return "could not find `clGetSupportedImageFormats` in handle";
-    clGetMemObjectInfo = (clGetMemObjectInfo_t)sclew_psearch(sclew_handle, "clGetMemObjectInfo");
-    if (!sclew_pdefined(clGetMemObjectInfo)) return "could not find `clGetMemObjectInfo` in handle";
-    clGetImageInfo = (clGetImageInfo_t)sclew_psearch(sclew_handle, "clGetImageInfo");
-    if (!sclew_pdefined(clGetImageInfo)) return "could not find `clGetImageInfo` in handle";
+    clRetainMemObject = (clRetainMemObject_t)clew_psearch(clew_handle, "clRetainMemObject");
+    if (!clew_pdefined(clRetainMemObject)) return "could not find `clRetainMemObject` in handle";
+    clReleaseMemObject = (clReleaseMemObject_t)clew_psearch(clew_handle, "clReleaseMemObject");
+    if (!clew_pdefined(clReleaseMemObject)) return "could not find `clReleaseMemObject` in handle";
+    clGetSupportedImageFormats = (clGetSupportedImageFormats_t)clew_psearch(clew_handle, "clGetSupportedImageFormats");
+    if (!clew_pdefined(clGetSupportedImageFormats)) return "could not find `clGetSupportedImageFormats` in handle";
+    clGetMemObjectInfo = (clGetMemObjectInfo_t)clew_psearch(clew_handle, "clGetMemObjectInfo");
+    if (!clew_pdefined(clGetMemObjectInfo)) return "could not find `clGetMemObjectInfo` in handle";
+    clGetImageInfo = (clGetImageInfo_t)clew_psearch(clew_handle, "clGetImageInfo");
+    if (!clew_pdefined(clGetImageInfo)) return "could not find `clGetImageInfo` in handle";
 #ifdef CL_VERSION_2_0
-    clGetPipeInfo = (clGetPipeInfo_t)sclew_psearch(sclew_handle, "clGetPipeInfo");
-    if (!sclew_pdefined(clGetPipeInfo)) return "could not find `clGetPipeInfo` in handle";
+    clGetPipeInfo = (clGetPipeInfo_t)clew_psearch(clew_handle, "clGetPipeInfo");
+    if (!clew_pdefined(clGetPipeInfo)) return "could not find `clGetPipeInfo` in handle";
 #endif
 #ifdef CL_VERSION_1_1
-    clSetMemObjectDestructorCallback = (clSetMemObjectDestructorCallback_t)sclew_psearch(sclew_handle, "clSetMemObjectDestructorCallback");
-    if (!sclew_pdefined(clSetMemObjectDestructorCallback)) return "could not find `clSetMemObjectDestructorCallback` in handle";
+    clSetMemObjectDestructorCallback = (clSetMemObjectDestructorCallback_t)clew_psearch(clew_handle, "clSetMemObjectDestructorCallback");
+    if (!clew_pdefined(clSetMemObjectDestructorCallback)) return "could not find `clSetMemObjectDestructorCallback` in handle";
 #endif
 #ifdef CL_VERSION_2_0
-    clSVMAlloc = (clSVMAlloc_t)sclew_psearch(sclew_handle, "clSVMAlloc");
-    if (!sclew_pdefined(clSVMAlloc)) return "could not find `clSVMAlloc` in handle";
-    clSVMFree = (clSVMFree_t)sclew_psearch(sclew_handle, "clSVMFree");
-    if (!sclew_pdefined(clSVMFree)) return "could not find `clSVMFree` in handle";
+    clSVMAlloc = (clSVMAlloc_t)clew_psearch(clew_handle, "clSVMAlloc");
+    if (!clew_pdefined(clSVMAlloc)) return "could not find `clSVMAlloc` in handle";
+    clSVMFree = (clSVMFree_t)clew_psearch(clew_handle, "clSVMFree");
+    if (!clew_pdefined(clSVMFree)) return "could not find `clSVMFree` in handle";
 #endif
 #ifdef CL_VERSION_2_0
-    clCreateSamplerWithProperties = (clCreateSamplerWithProperties_t)sclew_psearch(sclew_handle, "clCreateSamplerWithProperties");
-    if (!sclew_pdefined(clCreateSamplerWithProperties)) return "could not find `clCreateSamplerWithProperties` in handle";
+    clCreateSamplerWithProperties = (clCreateSamplerWithProperties_t)clew_psearch(clew_handle, "clCreateSamplerWithProperties");
+    if (!clew_pdefined(clCreateSamplerWithProperties)) return "could not find `clCreateSamplerWithProperties` in handle";
 #endif
-    clRetainSampler = (clRetainSampler_t)sclew_psearch(sclew_handle, "clRetainSampler");
-    if (!sclew_pdefined(clRetainSampler)) return "could not find `clRetainSampler` in handle";
-    clReleaseSampler = (clReleaseSampler_t)sclew_psearch(sclew_handle, "clReleaseSampler");
-    if (!sclew_pdefined(clReleaseSampler)) return "could not find `clReleaseSampler` in handle";
-    clGetSamplerInfo = (clGetSamplerInfo_t)sclew_psearch(sclew_handle, "clGetSamplerInfo");
-    if (!sclew_pdefined(clGetSamplerInfo)) return "could not find `clGetSamplerInfo` in handle";
-    clCreateProgramWithSource = (clCreateProgramWithSource_t)sclew_psearch(sclew_handle, "clCreateProgramWithSource");
-    if (!sclew_pdefined(clCreateProgramWithSource)) return "could not find `clCreateProgramWithSource` in handle";
-    clCreateProgramWithBinary = (clCreateProgramWithBinary_t)sclew_psearch(sclew_handle, "clCreateProgramWithBinary");
-    if (!sclew_pdefined(clCreateProgramWithBinary)) return "could not find `clCreateProgramWithBinary` in handle";
+    clRetainSampler = (clRetainSampler_t)clew_psearch(clew_handle, "clRetainSampler");
+    if (!clew_pdefined(clRetainSampler)) return "could not find `clRetainSampler` in handle";
+    clReleaseSampler = (clReleaseSampler_t)clew_psearch(clew_handle, "clReleaseSampler");
+    if (!clew_pdefined(clReleaseSampler)) return "could not find `clReleaseSampler` in handle";
+    clGetSamplerInfo = (clGetSamplerInfo_t)clew_psearch(clew_handle, "clGetSamplerInfo");
+    if (!clew_pdefined(clGetSamplerInfo)) return "could not find `clGetSamplerInfo` in handle";
+    clCreateProgramWithSource = (clCreateProgramWithSource_t)clew_psearch(clew_handle, "clCreateProgramWithSource");
+    if (!clew_pdefined(clCreateProgramWithSource)) return "could not find `clCreateProgramWithSource` in handle";
+    clCreateProgramWithBinary = (clCreateProgramWithBinary_t)clew_psearch(clew_handle, "clCreateProgramWithBinary");
+    if (!clew_pdefined(clCreateProgramWithBinary)) return "could not find `clCreateProgramWithBinary` in handle";
 #ifdef CL_VERSION_1_2
-    clCreateProgramWithBuiltInKernels = (clCreateProgramWithBuiltInKernels_t)sclew_psearch(sclew_handle, "clCreateProgramWithBuiltInKernels");
-    if (!sclew_pdefined(clCreateProgramWithBuiltInKernels)) return "could not find `clCreateProgramWithBuiltInKernels` in handle";
+    clCreateProgramWithBuiltInKernels = (clCreateProgramWithBuiltInKernels_t)clew_psearch(clew_handle, "clCreateProgramWithBuiltInKernels");
+    if (!clew_pdefined(clCreateProgramWithBuiltInKernels)) return "could not find `clCreateProgramWithBuiltInKernels` in handle";
 #endif
 #ifdef CL_VERSION_2_1
-    clCreateProgramWithIL = (clCreateProgramWithIL_t)sclew_psearch(sclew_handle, "clCreateProgramWithIL");
-    if (!sclew_pdefined(clCreateProgramWithIL)) return "could not find `clCreateProgramWithIL` in handle";
+    clCreateProgramWithIL = (clCreateProgramWithIL_t)clew_psearch(clew_handle, "clCreateProgramWithIL");
+    if (!clew_pdefined(clCreateProgramWithIL)) return "could not find `clCreateProgramWithIL` in handle";
 #endif
-    clRetainProgram = (clRetainProgram_t)sclew_psearch(sclew_handle, "clRetainProgram");
-    if (!sclew_pdefined(clRetainProgram)) return "could not find `clRetainProgram` in handle";
-    clReleaseProgram = (clReleaseProgram_t)sclew_psearch(sclew_handle, "clReleaseProgram");
-    if (!sclew_pdefined(clReleaseProgram)) return "could not find `clReleaseProgram` in handle";
-    clBuildProgram = (clBuildProgram_t)sclew_psearch(sclew_handle, "clBuildProgram");
-    if (!sclew_pdefined(clBuildProgram)) return "could not find `clBuildProgram` in handle";
+    clRetainProgram = (clRetainProgram_t)clew_psearch(clew_handle, "clRetainProgram");
+    if (!clew_pdefined(clRetainProgram)) return "could not find `clRetainProgram` in handle";
+    clReleaseProgram = (clReleaseProgram_t)clew_psearch(clew_handle, "clReleaseProgram");
+    if (!clew_pdefined(clReleaseProgram)) return "could not find `clReleaseProgram` in handle";
+    clBuildProgram = (clBuildProgram_t)clew_psearch(clew_handle, "clBuildProgram");
+    if (!clew_pdefined(clBuildProgram)) return "could not find `clBuildProgram` in handle";
 #ifdef CL_VERSION_1_2
-    clCompileProgram = (clCompileProgram_t)sclew_psearch(sclew_handle, "clCompileProgram");
-    if (!sclew_pdefined(clCompileProgram)) return "could not find `clCompileProgram` in handle";
-    clLinkProgram = (clLinkProgram_t)sclew_psearch(sclew_handle, "clLinkProgram");
-    if (!sclew_pdefined(clLinkProgram)) return "could not find `clLinkProgram` in handle";
+    clCompileProgram = (clCompileProgram_t)clew_psearch(clew_handle, "clCompileProgram");
+    if (!clew_pdefined(clCompileProgram)) return "could not find `clCompileProgram` in handle";
+    clLinkProgram = (clLinkProgram_t)clew_psearch(clew_handle, "clLinkProgram");
+    if (!clew_pdefined(clLinkProgram)) return "could not find `clLinkProgram` in handle";
 #endif
 #ifdef CL_VERSION_2_2
-    clSetProgramReleaseCallback = (clSetProgramReleaseCallback_t)sclew_psearch(sclew_handle, "clSetProgramReleaseCallback");
-    if (!sclew_pdefined(clSetProgramReleaseCallback)) return "could not find `clSetProgramReleaseCallback` in handle";
-    clSetProgramSpecializationConstant = (clSetProgramSpecializationConstant_t)sclew_psearch(sclew_handle, "clSetProgramSpecializationConstant");
-    if (!sclew_pdefined(clSetProgramSpecializationConstant)) return "could not find `clSetProgramSpecializationConstant` in handle";
+    clSetProgramReleaseCallback = (clSetProgramReleaseCallback_t)clew_psearch(clew_handle, "clSetProgramReleaseCallback");
+    if (!clew_pdefined(clSetProgramReleaseCallback)) return "could not find `clSetProgramReleaseCallback` in handle";
+    clSetProgramSpecializationConstant = (clSetProgramSpecializationConstant_t)clew_psearch(clew_handle, "clSetProgramSpecializationConstant");
+    if (!clew_pdefined(clSetProgramSpecializationConstant)) return "could not find `clSetProgramSpecializationConstant` in handle";
 #endif
 #ifdef CL_VERSION_1_2
-    clUnloadPlatformCompiler = (clUnloadPlatformCompiler_t)sclew_psearch(sclew_handle, "clUnloadPlatformCompiler");
-    if (!sclew_pdefined(clUnloadPlatformCompiler)) return "could not find `clUnloadPlatformCompiler` in handle";
+    clUnloadPlatformCompiler = (clUnloadPlatformCompiler_t)clew_psearch(clew_handle, "clUnloadPlatformCompiler");
+    if (!clew_pdefined(clUnloadPlatformCompiler)) return "could not find `clUnloadPlatformCompiler` in handle";
 #endif
-    clGetProgramInfo = (clGetProgramInfo_t)sclew_psearch(sclew_handle, "clGetProgramInfo");
-    if (!sclew_pdefined(clGetProgramInfo)) return "could not find `clGetProgramInfo` in handle";
-    clGetProgramBuildInfo = (clGetProgramBuildInfo_t)sclew_psearch(sclew_handle, "clGetProgramBuildInfo");
-    if (!sclew_pdefined(clGetProgramBuildInfo)) return "could not find `clGetProgramBuildInfo` in handle";
-    clCreateKernel = (clCreateKernel_t)sclew_psearch(sclew_handle, "clCreateKernel");
-    if (!sclew_pdefined(clCreateKernel)) return "could not find `clCreateKernel` in handle";
-    clCreateKernelsInProgram = (clCreateKernelsInProgram_t)sclew_psearch(sclew_handle, "clCreateKernelsInProgram");
-    if (!sclew_pdefined(clCreateKernelsInProgram)) return "could not find `clCreateKernelsInProgram` in handle";
+    clGetProgramInfo = (clGetProgramInfo_t)clew_psearch(clew_handle, "clGetProgramInfo");
+    if (!clew_pdefined(clGetProgramInfo)) return "could not find `clGetProgramInfo` in handle";
+    clGetProgramBuildInfo = (clGetProgramBuildInfo_t)clew_psearch(clew_handle, "clGetProgramBuildInfo");
+    if (!clew_pdefined(clGetProgramBuildInfo)) return "could not find `clGetProgramBuildInfo` in handle";
+    clCreateKernel = (clCreateKernel_t)clew_psearch(clew_handle, "clCreateKernel");
+    if (!clew_pdefined(clCreateKernel)) return "could not find `clCreateKernel` in handle";
+    clCreateKernelsInProgram = (clCreateKernelsInProgram_t)clew_psearch(clew_handle, "clCreateKernelsInProgram");
+    if (!clew_pdefined(clCreateKernelsInProgram)) return "could not find `clCreateKernelsInProgram` in handle";
 #ifdef CL_VERSION_2_1
-    clCloneKernel = (clCloneKernel_t)sclew_psearch(sclew_handle, "clCloneKernel");
-    if (!sclew_pdefined(clCloneKernel)) return "could not find `clCloneKernel` in handle";
+    clCloneKernel = (clCloneKernel_t)clew_psearch(clew_handle, "clCloneKernel");
+    if (!clew_pdefined(clCloneKernel)) return "could not find `clCloneKernel` in handle";
 #endif
-    clRetainKernel = (clRetainKernel_t)sclew_psearch(sclew_handle, "clRetainKernel");
-    if (!sclew_pdefined(clRetainKernel)) return "could not find `clRetainKernel` in handle";
-    clReleaseKernel = (clReleaseKernel_t)sclew_psearch(sclew_handle, "clReleaseKernel");
-    if (!sclew_pdefined(clReleaseKernel)) return "could not find `clReleaseKernel` in handle";
-    clSetKernelArg = (clSetKernelArg_t)sclew_psearch(sclew_handle, "clSetKernelArg");
-    if (!sclew_pdefined(clSetKernelArg)) return "could not find `clSetKernelArg` in handle";
+    clRetainKernel = (clRetainKernel_t)clew_psearch(clew_handle, "clRetainKernel");
+    if (!clew_pdefined(clRetainKernel)) return "could not find `clRetainKernel` in handle";
+    clReleaseKernel = (clReleaseKernel_t)clew_psearch(clew_handle, "clReleaseKernel");
+    if (!clew_pdefined(clReleaseKernel)) return "could not find `clReleaseKernel` in handle";
+    clSetKernelArg = (clSetKernelArg_t)clew_psearch(clew_handle, "clSetKernelArg");
+    if (!clew_pdefined(clSetKernelArg)) return "could not find `clSetKernelArg` in handle";
 #ifdef CL_VERSION_2_0
-    clSetKernelArgSVMPointer = (clSetKernelArgSVMPointer_t)sclew_psearch(sclew_handle, "clSetKernelArgSVMPointer");
-    if (!sclew_pdefined(clSetKernelArgSVMPointer)) return "could not find `clSetKernelArgSVMPointer` in handle";
-    clSetKernelExecInfo = (clSetKernelExecInfo_t)sclew_psearch(sclew_handle, "clSetKernelExecInfo");
-    if (!sclew_pdefined(clSetKernelExecInfo)) return "could not find `clSetKernelExecInfo` in handle";
+    clSetKernelArgSVMPointer = (clSetKernelArgSVMPointer_t)clew_psearch(clew_handle, "clSetKernelArgSVMPointer");
+    if (!clew_pdefined(clSetKernelArgSVMPointer)) return "could not find `clSetKernelArgSVMPointer` in handle";
+    clSetKernelExecInfo = (clSetKernelExecInfo_t)clew_psearch(clew_handle, "clSetKernelExecInfo");
+    if (!clew_pdefined(clSetKernelExecInfo)) return "could not find `clSetKernelExecInfo` in handle";
 #endif
-    clGetKernelInfo = (clGetKernelInfo_t)sclew_psearch(sclew_handle, "clGetKernelInfo");
-    if (!sclew_pdefined(clGetKernelInfo)) return "could not find `clGetKernelInfo` in handle";
+    clGetKernelInfo = (clGetKernelInfo_t)clew_psearch(clew_handle, "clGetKernelInfo");
+    if (!clew_pdefined(clGetKernelInfo)) return "could not find `clGetKernelInfo` in handle";
 #ifdef CL_VERSION_1_2
-    clGetKernelArgInfo = (clGetKernelArgInfo_t)sclew_psearch(sclew_handle, "clGetKernelArgInfo");
-    if (!sclew_pdefined(clGetKernelArgInfo)) return "could not find `clGetKernelArgInfo` in handle";
+    clGetKernelArgInfo = (clGetKernelArgInfo_t)clew_psearch(clew_handle, "clGetKernelArgInfo");
+    if (!clew_pdefined(clGetKernelArgInfo)) return "could not find `clGetKernelArgInfo` in handle";
 #endif
-    clGetKernelWorkGroupInfo = (clGetKernelWorkGroupInfo_t)sclew_psearch(sclew_handle, "clGetKernelWorkGroupInfo");
-    if (!sclew_pdefined(clGetKernelWorkGroupInfo)) return "could not find `clGetKernelWorkGroupInfo` in handle";
+    clGetKernelWorkGroupInfo = (clGetKernelWorkGroupInfo_t)clew_psearch(clew_handle, "clGetKernelWorkGroupInfo");
+    if (!clew_pdefined(clGetKernelWorkGroupInfo)) return "could not find `clGetKernelWorkGroupInfo` in handle";
 #ifdef CL_VERSION_2_1
-    clGetKernelSubGroupInfo = (clGetKernelSubGroupInfo_t)sclew_psearch(sclew_handle, "clGetKernelSubGroupInfo");
-    if (!sclew_pdefined(clGetKernelSubGroupInfo)) return "could not find `clGetKernelSubGroupInfo` in handle";
+    clGetKernelSubGroupInfo = (clGetKernelSubGroupInfo_t)clew_psearch(clew_handle, "clGetKernelSubGroupInfo");
+    if (!clew_pdefined(clGetKernelSubGroupInfo)) return "could not find `clGetKernelSubGroupInfo` in handle";
 #endif
-    clWaitForEvents = (clWaitForEvents_t)sclew_psearch(sclew_handle, "clWaitForEvents");
-    if (!sclew_pdefined(clWaitForEvents)) return "could not find `clWaitForEvents` in handle";
-    clGetEventInfo = (clGetEventInfo_t)sclew_psearch(sclew_handle, "clGetEventInfo");
-    if (!sclew_pdefined(clGetEventInfo)) return "could not find `clGetEventInfo` in handle";
+    clWaitForEvents = (clWaitForEvents_t)clew_psearch(clew_handle, "clWaitForEvents");
+    if (!clew_pdefined(clWaitForEvents)) return "could not find `clWaitForEvents` in handle";
+    clGetEventInfo = (clGetEventInfo_t)clew_psearch(clew_handle, "clGetEventInfo");
+    if (!clew_pdefined(clGetEventInfo)) return "could not find `clGetEventInfo` in handle";
 #ifdef CL_VERSION_1_1
-    clCreateUserEvent = (clCreateUserEvent_t)sclew_psearch(sclew_handle, "clCreateUserEvent");
-    if (!sclew_pdefined(clCreateUserEvent)) return "could not find `clCreateUserEvent` in handle";
+    clCreateUserEvent = (clCreateUserEvent_t)clew_psearch(clew_handle, "clCreateUserEvent");
+    if (!clew_pdefined(clCreateUserEvent)) return "could not find `clCreateUserEvent` in handle";
 #endif
-    clRetainEvent = (clRetainEvent_t)sclew_psearch(sclew_handle, "clRetainEvent");
-    if (!sclew_pdefined(clRetainEvent)) return "could not find `clRetainEvent` in handle";
-    clReleaseEvent = (clReleaseEvent_t)sclew_psearch(sclew_handle, "clReleaseEvent");
-    if (!sclew_pdefined(clReleaseEvent)) return "could not find `clReleaseEvent` in handle";
+    clRetainEvent = (clRetainEvent_t)clew_psearch(clew_handle, "clRetainEvent");
+    if (!clew_pdefined(clRetainEvent)) return "could not find `clRetainEvent` in handle";
+    clReleaseEvent = (clReleaseEvent_t)clew_psearch(clew_handle, "clReleaseEvent");
+    if (!clew_pdefined(clReleaseEvent)) return "could not find `clReleaseEvent` in handle";
 #ifdef CL_VERSION_1_1
-    clSetUserEventStatus = (clSetUserEventStatus_t)sclew_psearch(sclew_handle, "clSetUserEventStatus");
-    if (!sclew_pdefined(clSetUserEventStatus)) return "could not find `clSetUserEventStatus` in handle";
-    clSetEventCallback = (clSetEventCallback_t)sclew_psearch(sclew_handle, "clSetEventCallback");
-    if (!sclew_pdefined(clSetEventCallback)) return "could not find `clSetEventCallback` in handle";
+    clSetUserEventStatus = (clSetUserEventStatus_t)clew_psearch(clew_handle, "clSetUserEventStatus");
+    if (!clew_pdefined(clSetUserEventStatus)) return "could not find `clSetUserEventStatus` in handle";
+    clSetEventCallback = (clSetEventCallback_t)clew_psearch(clew_handle, "clSetEventCallback");
+    if (!clew_pdefined(clSetEventCallback)) return "could not find `clSetEventCallback` in handle";
 #endif
-    clGetEventProfilingInfo = (clGetEventProfilingInfo_t)sclew_psearch(sclew_handle, "clGetEventProfilingInfo");
-    if (!sclew_pdefined(clGetEventProfilingInfo)) return "could not find `clGetEventProfilingInfo` in handle";
-    clFlush = (clFlush_t)sclew_psearch(sclew_handle, "clFlush");
-    if (!sclew_pdefined(clFlush)) return "could not find `clFlush` in handle";
-    clFinish = (clFinish_t)sclew_psearch(sclew_handle, "clFinish");
-    if (!sclew_pdefined(clFinish)) return "could not find `clFinish` in handle";
-    clEnqueueReadBuffer = (clEnqueueReadBuffer_t)sclew_psearch(sclew_handle, "clEnqueueReadBuffer");
-    if (!sclew_pdefined(clEnqueueReadBuffer)) return "could not find `clEnqueueReadBuffer` in handle";
+    clGetEventProfilingInfo = (clGetEventProfilingInfo_t)clew_psearch(clew_handle, "clGetEventProfilingInfo");
+    if (!clew_pdefined(clGetEventProfilingInfo)) return "could not find `clGetEventProfilingInfo` in handle";
+    clFlush = (clFlush_t)clew_psearch(clew_handle, "clFlush");
+    if (!clew_pdefined(clFlush)) return "could not find `clFlush` in handle";
+    clFinish = (clFinish_t)clew_psearch(clew_handle, "clFinish");
+    if (!clew_pdefined(clFinish)) return "could not find `clFinish` in handle";
+    clEnqueueReadBuffer = (clEnqueueReadBuffer_t)clew_psearch(clew_handle, "clEnqueueReadBuffer");
+    if (!clew_pdefined(clEnqueueReadBuffer)) return "could not find `clEnqueueReadBuffer` in handle";
 #ifdef CL_VERSION_1_1
-    clEnqueueReadBufferRect = (clEnqueueReadBufferRect_t)sclew_psearch(sclew_handle, "clEnqueueReadBufferRect");
-    if (!sclew_pdefined(clEnqueueReadBufferRect)) return "could not find `clEnqueueReadBufferRect` in handle";
+    clEnqueueReadBufferRect = (clEnqueueReadBufferRect_t)clew_psearch(clew_handle, "clEnqueueReadBufferRect");
+    if (!clew_pdefined(clEnqueueReadBufferRect)) return "could not find `clEnqueueReadBufferRect` in handle";
 #endif
-    clEnqueueWriteBuffer = (clEnqueueWriteBuffer_t)sclew_psearch(sclew_handle, "clEnqueueWriteBuffer");
-    if (!sclew_pdefined(clEnqueueWriteBuffer)) return "could not find `clEnqueueWriteBuffer` in handle";
+    clEnqueueWriteBuffer = (clEnqueueWriteBuffer_t)clew_psearch(clew_handle, "clEnqueueWriteBuffer");
+    if (!clew_pdefined(clEnqueueWriteBuffer)) return "could not find `clEnqueueWriteBuffer` in handle";
 #ifdef CL_VERSION_1_1
-    clEnqueueWriteBufferRect = (clEnqueueWriteBufferRect_t)sclew_psearch(sclew_handle, "clEnqueueWriteBufferRect");
-    if (!sclew_pdefined(clEnqueueWriteBufferRect)) return "could not find `clEnqueueWriteBufferRect` in handle";
+    clEnqueueWriteBufferRect = (clEnqueueWriteBufferRect_t)clew_psearch(clew_handle, "clEnqueueWriteBufferRect");
+    if (!clew_pdefined(clEnqueueWriteBufferRect)) return "could not find `clEnqueueWriteBufferRect` in handle";
 #endif
 #ifdef CL_VERSION_1_2
-    clEnqueueFillBuffer = (clEnqueueFillBuffer_t)sclew_psearch(sclew_handle, "clEnqueueFillBuffer");
-    if (!sclew_pdefined(clEnqueueFillBuffer)) return "could not find `clEnqueueFillBuffer` in handle";
+    clEnqueueFillBuffer = (clEnqueueFillBuffer_t)clew_psearch(clew_handle, "clEnqueueFillBuffer");
+    if (!clew_pdefined(clEnqueueFillBuffer)) return "could not find `clEnqueueFillBuffer` in handle";
 #endif
-    clEnqueueCopyBuffer = (clEnqueueCopyBuffer_t)sclew_psearch(sclew_handle, "clEnqueueCopyBuffer");
-    if (!sclew_pdefined(clEnqueueCopyBuffer)) return "could not find `clEnqueueCopyBuffer` in handle";
+    clEnqueueCopyBuffer = (clEnqueueCopyBuffer_t)clew_psearch(clew_handle, "clEnqueueCopyBuffer");
+    if (!clew_pdefined(clEnqueueCopyBuffer)) return "could not find `clEnqueueCopyBuffer` in handle";
 #ifdef CL_VERSION_1_1
-    clEnqueueCopyBufferRect = (clEnqueueCopyBufferRect_t)sclew_psearch(sclew_handle, "clEnqueueCopyBufferRect");
-    if (!sclew_pdefined(clEnqueueCopyBufferRect)) return "could not find `clEnqueueCopyBufferRect` in handle";
+    clEnqueueCopyBufferRect = (clEnqueueCopyBufferRect_t)clew_psearch(clew_handle, "clEnqueueCopyBufferRect");
+    if (!clew_pdefined(clEnqueueCopyBufferRect)) return "could not find `clEnqueueCopyBufferRect` in handle";
 #endif
-    clEnqueueReadImage = (clEnqueueReadImage_t)sclew_psearch(sclew_handle, "clEnqueueReadImage");
-    if (!sclew_pdefined(clEnqueueReadImage)) return "could not find `clEnqueueReadImage` in handle";
-    clEnqueueWriteImage = (clEnqueueWriteImage_t)sclew_psearch(sclew_handle, "clEnqueueWriteImage");
-    if (!sclew_pdefined(clEnqueueWriteImage)) return "could not find `clEnqueueWriteImage` in handle";
+    clEnqueueReadImage = (clEnqueueReadImage_t)clew_psearch(clew_handle, "clEnqueueReadImage");
+    if (!clew_pdefined(clEnqueueReadImage)) return "could not find `clEnqueueReadImage` in handle";
+    clEnqueueWriteImage = (clEnqueueWriteImage_t)clew_psearch(clew_handle, "clEnqueueWriteImage");
+    if (!clew_pdefined(clEnqueueWriteImage)) return "could not find `clEnqueueWriteImage` in handle";
 #ifdef CL_VERSION_1_2
-    clEnqueueFillImage = (clEnqueueFillImage_t)sclew_psearch(sclew_handle, "clEnqueueFillImage");
-    if (!sclew_pdefined(clEnqueueFillImage)) return "could not find `clEnqueueFillImage` in handle";
+    clEnqueueFillImage = (clEnqueueFillImage_t)clew_psearch(clew_handle, "clEnqueueFillImage");
+    if (!clew_pdefined(clEnqueueFillImage)) return "could not find `clEnqueueFillImage` in handle";
 #endif
-    clEnqueueCopyImage = (clEnqueueCopyImage_t)sclew_psearch(sclew_handle, "clEnqueueCopyImage");
-    if (!sclew_pdefined(clEnqueueCopyImage)) return "could not find `clEnqueueCopyImage` in handle";
-    clEnqueueCopyImageToBuffer = (clEnqueueCopyImageToBuffer_t)sclew_psearch(sclew_handle, "clEnqueueCopyImageToBuffer");
-    if (!sclew_pdefined(clEnqueueCopyImageToBuffer)) return "could not find `clEnqueueCopyImageToBuffer` in handle";
-    clEnqueueCopyBufferToImage = (clEnqueueCopyBufferToImage_t)sclew_psearch(sclew_handle, "clEnqueueCopyBufferToImage");
-    if (!sclew_pdefined(clEnqueueCopyBufferToImage)) return "could not find `clEnqueueCopyBufferToImage` in handle";
-    clEnqueueMapBuffer = (clEnqueueMapBuffer_t)sclew_psearch(sclew_handle, "clEnqueueMapBuffer");
-    if (!sclew_pdefined(clEnqueueMapBuffer)) return "could not find `clEnqueueMapBuffer` in handle";
-    clEnqueueMapImage = (clEnqueueMapImage_t)sclew_psearch(sclew_handle, "clEnqueueMapImage");
-    if (!sclew_pdefined(clEnqueueMapImage)) return "could not find `clEnqueueMapImage` in handle";
-    clEnqueueUnmapMemObject = (clEnqueueUnmapMemObject_t)sclew_psearch(sclew_handle, "clEnqueueUnmapMemObject");
-    if (!sclew_pdefined(clEnqueueUnmapMemObject)) return "could not find `clEnqueueUnmapMemObject` in handle";
+    clEnqueueCopyImage = (clEnqueueCopyImage_t)clew_psearch(clew_handle, "clEnqueueCopyImage");
+    if (!clew_pdefined(clEnqueueCopyImage)) return "could not find `clEnqueueCopyImage` in handle";
+    clEnqueueCopyImageToBuffer = (clEnqueueCopyImageToBuffer_t)clew_psearch(clew_handle, "clEnqueueCopyImageToBuffer");
+    if (!clew_pdefined(clEnqueueCopyImageToBuffer)) return "could not find `clEnqueueCopyImageToBuffer` in handle";
+    clEnqueueCopyBufferToImage = (clEnqueueCopyBufferToImage_t)clew_psearch(clew_handle, "clEnqueueCopyBufferToImage");
+    if (!clew_pdefined(clEnqueueCopyBufferToImage)) return "could not find `clEnqueueCopyBufferToImage` in handle";
+    clEnqueueMapBuffer = (clEnqueueMapBuffer_t)clew_psearch(clew_handle, "clEnqueueMapBuffer");
+    if (!clew_pdefined(clEnqueueMapBuffer)) return "could not find `clEnqueueMapBuffer` in handle";
+    clEnqueueMapImage = (clEnqueueMapImage_t)clew_psearch(clew_handle, "clEnqueueMapImage");
+    if (!clew_pdefined(clEnqueueMapImage)) return "could not find `clEnqueueMapImage` in handle";
+    clEnqueueUnmapMemObject = (clEnqueueUnmapMemObject_t)clew_psearch(clew_handle, "clEnqueueUnmapMemObject");
+    if (!clew_pdefined(clEnqueueUnmapMemObject)) return "could not find `clEnqueueUnmapMemObject` in handle";
 #ifdef CL_VERSION_1_2
-    clEnqueueMigrateMemObjects = (clEnqueueMigrateMemObjects_t)sclew_psearch(sclew_handle, "clEnqueueMigrateMemObjects");
-    if (!sclew_pdefined(clEnqueueMigrateMemObjects)) return "could not find `clEnqueueMigrateMemObjects` in handle";
+    clEnqueueMigrateMemObjects = (clEnqueueMigrateMemObjects_t)clew_psearch(clew_handle, "clEnqueueMigrateMemObjects");
+    if (!clew_pdefined(clEnqueueMigrateMemObjects)) return "could not find `clEnqueueMigrateMemObjects` in handle";
 #endif
-    clEnqueueNDRangeKernel = (clEnqueueNDRangeKernel_t)sclew_psearch(sclew_handle, "clEnqueueNDRangeKernel");
-    if (!sclew_pdefined(clEnqueueNDRangeKernel)) return "could not find `clEnqueueNDRangeKernel` in handle";
-    clEnqueueNativeKernel = (clEnqueueNativeKernel_t)sclew_psearch(sclew_handle, "clEnqueueNativeKernel");
-    if (!sclew_pdefined(clEnqueueNativeKernel)) return "could not find `clEnqueueNativeKernel` in handle";
+    clEnqueueNDRangeKernel = (clEnqueueNDRangeKernel_t)clew_psearch(clew_handle, "clEnqueueNDRangeKernel");
+    if (!clew_pdefined(clEnqueueNDRangeKernel)) return "could not find `clEnqueueNDRangeKernel` in handle";
+    clEnqueueNativeKernel = (clEnqueueNativeKernel_t)clew_psearch(clew_handle, "clEnqueueNativeKernel");
+    if (!clew_pdefined(clEnqueueNativeKernel)) return "could not find `clEnqueueNativeKernel` in handle";
 #ifdef CL_VERSION_1_2
-    clEnqueueMarkerWithWaitList = (clEnqueueMarkerWithWaitList_t)sclew_psearch(sclew_handle, "clEnqueueMarkerWithWaitList");
-    if (!sclew_pdefined(clEnqueueMarkerWithWaitList)) return "could not find `clEnqueueMarkerWithWaitList` in handle";
-    clEnqueueBarrierWithWaitList = (clEnqueueBarrierWithWaitList_t)sclew_psearch(sclew_handle, "clEnqueueBarrierWithWaitList");
-    if (!sclew_pdefined(clEnqueueBarrierWithWaitList)) return "could not find `clEnqueueBarrierWithWaitList` in handle";
+    clEnqueueMarkerWithWaitList = (clEnqueueMarkerWithWaitList_t)clew_psearch(clew_handle, "clEnqueueMarkerWithWaitList");
+    if (!clew_pdefined(clEnqueueMarkerWithWaitList)) return "could not find `clEnqueueMarkerWithWaitList` in handle";
+    clEnqueueBarrierWithWaitList = (clEnqueueBarrierWithWaitList_t)clew_psearch(clew_handle, "clEnqueueBarrierWithWaitList");
+    if (!clew_pdefined(clEnqueueBarrierWithWaitList)) return "could not find `clEnqueueBarrierWithWaitList` in handle";
 #endif
 #ifdef CL_VERSION_2_0
-    clEnqueueSVMFree = (clEnqueueSVMFree_t)sclew_psearch(sclew_handle, "clEnqueueSVMFree");
-    if (!sclew_pdefined(clEnqueueSVMFree)) return "could not find `clEnqueueSVMFree` in handle";
-    clEnqueueSVMMemcpy = (clEnqueueSVMMemcpy_t)sclew_psearch(sclew_handle, "clEnqueueSVMMemcpy");
-    if (!sclew_pdefined(clEnqueueSVMMemcpy)) return "could not find `clEnqueueSVMMemcpy` in handle";
-    clEnqueueSVMMemFill = (clEnqueueSVMMemFill_t)sclew_psearch(sclew_handle, "clEnqueueSVMMemFill");
-    if (!sclew_pdefined(clEnqueueSVMMemFill)) return "could not find `clEnqueueSVMMemFill` in handle";
-    clEnqueueSVMMap = (clEnqueueSVMMap_t)sclew_psearch(sclew_handle, "clEnqueueSVMMap");
-    if (!sclew_pdefined(clEnqueueSVMMap)) return "could not find `clEnqueueSVMMap` in handle";
-    clEnqueueSVMUnmap = (clEnqueueSVMUnmap_t)sclew_psearch(sclew_handle, "clEnqueueSVMUnmap");
-    if (!sclew_pdefined(clEnqueueSVMUnmap)) return "could not find `clEnqueueSVMUnmap` in handle";
+    clEnqueueSVMFree = (clEnqueueSVMFree_t)clew_psearch(clew_handle, "clEnqueueSVMFree");
+    if (!clew_pdefined(clEnqueueSVMFree)) return "could not find `clEnqueueSVMFree` in handle";
+    clEnqueueSVMMemcpy = (clEnqueueSVMMemcpy_t)clew_psearch(clew_handle, "clEnqueueSVMMemcpy");
+    if (!clew_pdefined(clEnqueueSVMMemcpy)) return "could not find `clEnqueueSVMMemcpy` in handle";
+    clEnqueueSVMMemFill = (clEnqueueSVMMemFill_t)clew_psearch(clew_handle, "clEnqueueSVMMemFill");
+    if (!clew_pdefined(clEnqueueSVMMemFill)) return "could not find `clEnqueueSVMMemFill` in handle";
+    clEnqueueSVMMap = (clEnqueueSVMMap_t)clew_psearch(clew_handle, "clEnqueueSVMMap");
+    if (!clew_pdefined(clEnqueueSVMMap)) return "could not find `clEnqueueSVMMap` in handle";
+    clEnqueueSVMUnmap = (clEnqueueSVMUnmap_t)clew_psearch(clew_handle, "clEnqueueSVMUnmap");
+    if (!clew_pdefined(clEnqueueSVMUnmap)) return "could not find `clEnqueueSVMUnmap` in handle";
 #endif
 #ifdef CL_VERSION_2_1
-    clEnqueueSVMMigrateMem = (clEnqueueSVMMigrateMem_t)sclew_psearch(sclew_handle, "clEnqueueSVMMigrateMem");
-    if (!sclew_pdefined(clEnqueueSVMMigrateMem)) return "could not find `clEnqueueSVMMigrateMem` in handle";
+    clEnqueueSVMMigrateMem = (clEnqueueSVMMigrateMem_t)clew_psearch(clew_handle, "clEnqueueSVMMigrateMem");
+    if (!clew_pdefined(clEnqueueSVMMigrateMem)) return "could not find `clEnqueueSVMMigrateMem` in handle";
 #endif
 #ifdef CL_VERSION_1_2
-    clGetExtensionFunctionAddressForPlatform = (clGetExtensionFunctionAddressForPlatform_t)sclew_psearch(sclew_handle, "clGetExtensionFunctionAddressForPlatform");
-    if (!sclew_pdefined(clGetExtensionFunctionAddressForPlatform)) return "could not find `clGetExtensionFunctionAddressForPlatform` in ";
+    clGetExtensionFunctionAddressForPlatform = (clGetExtensionFunctionAddressForPlatform_t)clew_psearch(clew_handle, "clGetExtensionFunctionAddressForPlatform");
+    if (!clew_pdefined(clGetExtensionFunctionAddressForPlatform)) return "could not find `clGetExtensionFunctionAddressForPlatform` in ";
 #endif
 #ifdef CL_USE_DEPRECATED_OPENCL_1_0_APIS
-    clSetCommandQueueProperty = (clSetCommandQueueProperty_t)sclew_psearch(sclew_handle, "clSetCommandQueueProperty");
-    if (!sclew_pdefined(clSetCommandQueueProperty)) return "could not find `clSetCommandQueueProperty` in handle";
+    clSetCommandQueueProperty = (clSetCommandQueueProperty_t)clew_psearch(clew_handle, "clSetCommandQueueProperty");
+    if (!clew_pdefined(clSetCommandQueueProperty)) return "could not find `clSetCommandQueueProperty` in handle";
 #endif
-    clCreateImage2D = (clCreateImage2D_t)sclew_psearch(sclew_handle, "clCreateImage2D");
-    if (!sclew_pdefined(clCreateImage2D)) return "could not find `clCreateImage2D` in handle";
-    clCreateImage3D = (clCreateImage3D_t)sclew_psearch(sclew_handle, "clCreateImage3D");
-    if (!sclew_pdefined(clCreateImage3D)) return "could not find `clCreateImage3D` in handle";
-    clEnqueueMarker = (clEnqueueMarker_t)sclew_psearch(sclew_handle, "clEnqueueMarker");
-    if (!sclew_pdefined(clEnqueueMarker)) return "could not find `clEnqueueMarker` in handle";
-    clEnqueueWaitForEvents = (clEnqueueWaitForEvents_t)sclew_psearch(sclew_handle, "clEnqueueWaitForEvents");
-    if (!sclew_pdefined(clEnqueueWaitForEvents)) return "could not find `clEnqueueWaitForEvents` in handle";
-    clEnqueueBarrier = (clEnqueueBarrier_t)sclew_psearch(sclew_handle, "clEnqueueBarrier");
-    if (!sclew_pdefined(clEnqueueBarrier)) return "could not find `clEnqueueBarrier` in handle";
-    clUnloadCompiler = (clUnloadCompiler_t)sclew_psearch(sclew_handle, "clUnloadCompiler");
-    if (!sclew_pdefined(clUnloadCompiler)) return "could not find `clUnloadCompiler` in handle";
-    clGetExtensionFunctionAddress = (clGetExtensionFunctionAddress_t)sclew_psearch(sclew_handle, "clGetExtensionFunctionAddress");
-    if (!sclew_pdefined(clGetExtensionFunctionAddress)) return "could not find `clGetExtensionFunctionAddress` in handle";
-    clCreateCommandQueue = (clCreateCommandQueue_t)sclew_psearch(sclew_handle, "clCreateCommandQueue");
-    if (!sclew_pdefined(clCreateCommandQueue)) return "could not find `clCreateCommandQueue` in handle";
-    clCreateSampler = (clCreateSampler_t)sclew_psearch(sclew_handle, "clCreateSampler");
-    if (!sclew_pdefined(clCreateSampler)) return "could not find `clCreateSampler` in handle";
-    clEnqueueTask = (clEnqueueTask_t)sclew_psearch(sclew_handle, "clEnqueueTask");
-    if (!sclew_pdefined(clEnqueueTask)) return "could not find `clEnqueueTask` in handle";
+    clCreateImage2D = (clCreateImage2D_t)clew_psearch(clew_handle, "clCreateImage2D");
+    if (!clew_pdefined(clCreateImage2D)) return "could not find `clCreateImage2D` in handle";
+    clCreateImage3D = (clCreateImage3D_t)clew_psearch(clew_handle, "clCreateImage3D");
+    if (!clew_pdefined(clCreateImage3D)) return "could not find `clCreateImage3D` in handle";
+    clEnqueueMarker = (clEnqueueMarker_t)clew_psearch(clew_handle, "clEnqueueMarker");
+    if (!clew_pdefined(clEnqueueMarker)) return "could not find `clEnqueueMarker` in handle";
+    clEnqueueWaitForEvents = (clEnqueueWaitForEvents_t)clew_psearch(clew_handle, "clEnqueueWaitForEvents");
+    if (!clew_pdefined(clEnqueueWaitForEvents)) return "could not find `clEnqueueWaitForEvents` in handle";
+    clEnqueueBarrier = (clEnqueueBarrier_t)clew_psearch(clew_handle, "clEnqueueBarrier");
+    if (!clew_pdefined(clEnqueueBarrier)) return "could not find `clEnqueueBarrier` in handle";
+    clUnloadCompiler = (clUnloadCompiler_t)clew_psearch(clew_handle, "clUnloadCompiler");
+    if (!clew_pdefined(clUnloadCompiler)) return "could not find `clUnloadCompiler` in handle";
+    clGetExtensionFunctionAddress = (clGetExtensionFunctionAddress_t)clew_psearch(clew_handle, "clGetExtensionFunctionAddress");
+    if (!clew_pdefined(clGetExtensionFunctionAddress)) return "could not find `clGetExtensionFunctionAddress` in handle";
+    clCreateCommandQueue = (clCreateCommandQueue_t)clew_psearch(clew_handle, "clCreateCommandQueue");
+    if (!clew_pdefined(clCreateCommandQueue)) return "could not find `clCreateCommandQueue` in handle";
+    clCreateSampler = (clCreateSampler_t)clew_psearch(clew_handle, "clCreateSampler");
+    if (!clew_pdefined(clCreateSampler)) return "could not find `clCreateSampler` in handle";
+    clEnqueueTask = (clEnqueueTask_t)clew_psearch(clew_handle, "clEnqueueTask");
+    if (!clew_pdefined(clEnqueueTask)) return "could not find `clEnqueueTask` in handle";
 
     return NULL;
 }
 
-void sclew_quit() {
-    if (sclew_handle != NULL) sclew_dlclose(sclew_handle);
-    sclew_handle = NULL;
+void clew_quit() {
+    if (clew_handle != NULL) clew_dlclose(clew_handle);
+    clew_handle = NULL;
 }
 
-#endif /* SCLEW_IMPLEMENTATION */
+#endif /* clew_IMPLEMENTATION */

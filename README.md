@@ -1,4 +1,4 @@
-# Single file openCL Extension Wrangler library
+# Single file OpenCL Extension Wrangler library
 
 `clew.h` is released as public domain, allowing unrestricted use, modification, and distribution without any restrictions. When applicable to the content created by The Khronos Group Inc., this file complies with the Apache License, Version 2.0.
 

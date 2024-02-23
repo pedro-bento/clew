@@ -3442,6 +3442,17 @@ clEnqueueTask_t)(cl_command_queue  command_queue,
 // This content has been created by Pedro Bento 
 // and the additions can be found at: https://github.com/pedro-bento/clew
 
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#elif defined(__GNUC__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#elif defined(_WIN32) && defined(_MSC_VER)
+    #pragma warning(push)
+    #pragma warning(disable : 4996)
+#endif
+
 clGetPlatformIDs_t clGetPlatformIDs;
 clGetPlatformInfo_t clGetPlatformInfo;
 clGetDeviceIDs_t clGetDeviceIDs;
@@ -3625,6 +3636,14 @@ clCreateCommandQueue_t clCreateCommandQueue;
 clCreateSampler_t clCreateSampler;
 clEnqueueTask_t clEnqueueTask;
 
+#if defined(__clang__)
+    #pragma clang diagnostic pop
+#elif defined(__GNUC__)
+    #pragma GCC diagnostic pop
+#elif defined(_WIN32) && defined(_MSC_VER)
+    #pragma warning( pop )
+#endif
+
 #ifdef __cplusplus
 }
 #endif
@@ -3677,6 +3696,17 @@ const char* clew_init()
         if (clew_handle != NULL) break;
     }
     if (clew_handle == NULL) return "could not find OpenCL in system, make sure it is installed";
+
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#elif defined(__GNUC__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#elif defined(_WIN32) && defined(_MSC_VER)
+    #pragma warning(push)
+    #pragma warning(disable : 4996)
+#endif
 
     clGetPlatformIDs = (clGetPlatformIDs_t)clew_psearch(clew_handle, "clGetPlatformIDs");
     if (!clew_pdefined(clGetPlatformIDs)) return "could not find `clGetPlatformIDs` in handle";
@@ -3974,6 +4004,14 @@ const char* clew_init()
     if (!clew_pdefined(clCreateSampler)) return "could not find `clCreateSampler` in handle";
     clEnqueueTask = (clEnqueueTask_t)clew_psearch(clew_handle, "clEnqueueTask");
     if (!clew_pdefined(clEnqueueTask)) return "could not find `clEnqueueTask` in handle";
+
+#if defined(__clang__)
+    #pragma clang diagnostic pop
+#elif defined(__GNUC__)
+    #pragma GCC diagnostic pop
+#elif defined(_WIN32) && defined(_MSC_VER)
+    #pragma warning( pop )
+#endif
 
     return NULL;
 }

@@ -1,9 +1,9 @@
-// clew.h - v0.1 - Public Domain - Pedro Bento 2024
+// clew.h - v3.0.15 - Public Domain - Pedro Bento 2024
 // 
 // Portions of this file may be subject to the Apache License, Version 2.0, 
 // when applicable to content created by The Khronos Group Inc.
 //
-// Single file openCL Extension Wrangler library.
+// Single file OpenCL v3.0.15 specification Extension Wrangler library.
 //
 // This file provides both the interface and the implementation.
 // To instantiate the implementation,
